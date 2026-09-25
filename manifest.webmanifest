@@ -1,0 +1,19 @@
+{
+  "id": "./?app=tabitgii-online-v2-1",
+  "name": "Та битгий уурлаарай! — Online",
+  "short_name": "Та битгий уурлаарай Online",
+  "description": "Монголын сонгодог хөлөгт тоглоом — оффлайн болон найзуудаа урьдаг онлайн өрөө.",
+  "lang": "mn",
+  "dir": "ltr",
+  "start_url": "./?source=tabitgii-online",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#c99b62",
+  "theme_color": "#70442a",
+  "categories": ["games", "entertainment"],
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ]
+}

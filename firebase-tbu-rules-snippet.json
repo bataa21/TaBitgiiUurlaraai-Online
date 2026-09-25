@@ -1,0 +1,14 @@
+{
+  "tbuRooms": {
+    "$room": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      ".validate": "!newData.exists() || (newData.hasChildren(['hostUid','status','players']) && newData.child('hostUid').isString() && (newData.child('status').val() === 'waiting' || newData.child('status').val() === 'started'))",
+      "players": {
+        "$uid": {
+          ".validate": "!newData.exists() || (newData.hasChildren(['name','color','ready']) && newData.child('name').isString() && newData.child('name').val().length > 0 && newData.child('name').val().length <= 18 && (newData.child('color').val() === 'red' || newData.child('color').val() === 'blue' || newData.child('color').val() === 'green' || newData.child('color').val() === 'yellow') && newData.child('ready').isBoolean())"
+        }
+      }
+    }
+  }
+}
