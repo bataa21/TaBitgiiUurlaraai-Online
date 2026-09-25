@@ -16,6 +16,10 @@ FIREBASE_SETUP.txt for the project details and public-release security note.
 V2.1 builds and tests the lobby foundation; synchronized dice and pawn movement
 belong to V2.2.
 
+Firebase connection correction:
+- API key casing verified directly against the Firebase Console configuration;
+- Online Edition cache identity bumped so the corrected connection loads immediately.
+
 Commercial structure:
 - offline play remains included;
 - hosting access is open during development and testing;
