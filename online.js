@@ -255,6 +255,12 @@
     try {
       await connect();
       const candidateRef = database.ref(`${ROOM_ROOT}/${candidate}`);
+      // Prime the local cache before starting the transaction. On a new
+      // browser/device, the transaction callback may otherwise receive an
+      // initial null value and abort before the existing room is downloaded.
+      const initialSnapshot = await candidateRef.once('value');
+      const initialRoom = initialSnapshot.val();
+      if (!initialRoom || initialRoom.status !== 'waiting') throw new Error('room-unavailable');
       const result = await candidateRef.transaction(room => {
         if (!room || room.status !== 'waiting') return;
         room.players ||= {};

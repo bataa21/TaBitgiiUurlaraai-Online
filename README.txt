@@ -20,6 +20,10 @@ Firebase connection correction:
 - API key casing verified directly against the Firebase Console configuration;
 - Online Edition cache identity bumped so the corrected connection loads immediately.
 
+Online join reliability fix:
+- invited devices now load and verify the room before beginning the join transaction;
+- prevents an existing room from being mistaken for a missing room on a browser with an empty local Firebase cache.
+
 Commercial structure:
 - offline play remains included;
 - hosting access is open during development and testing;
