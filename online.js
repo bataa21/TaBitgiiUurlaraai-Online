@@ -1,4 +1,4 @@
-// Та битгий уурлаарай — V2.2 Online Gameplay Synchronization
+// Та битгий уурлаарай — V2.2.1 Player View + Shared Animations
 (() => {
   'use strict';
 
@@ -147,6 +147,27 @@
     }
   }
 
+  function invitationText() {
+    return `🎲 “Та битгий уурлаарай!” тоглоомын ${roomCode} өрөөнд надтай тоглоорой!\n${invitationUrl()}`;
+  }
+
+  async function inviteMessenger() {
+    const messengerWindow = window.open('https://www.messenger.com/', '_blank', 'noopener,noreferrer');
+    try {
+      await copyText(invitationText());
+      setNote('Messenger нээгдлээ. Урилгын текст хуулагдсан — найзынхаа чатанд Paste хийгээрэй.', 'success');
+      if (!messengerWindow) setNote('Урилга хуулагдлаа. Messenger-ээ нээгээд Paste хийгээрэй.', 'success');
+    } catch (_) {
+      setNote('Messenger нээгдлээ. Код эсвэл холбоосыг гараар илгээнэ үү.', 'error');
+    }
+  }
+
+  function inviteFacebook() {
+    const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(invitationUrl())}`;
+    window.open(shareUrl, '_blank', 'popup=yes,width=680,height=640,noopener,noreferrer');
+    setNote('Facebook хуваалцах цонх нээгдлээ.', 'success');
+  }
+
   function playerEntries(room) {
     return Object.entries(room?.players || {}).filter(([, player]) => player && player.name);
   }
@@ -188,7 +209,7 @@
 
   function gameConfig(room) {
     const byColor = new Map(playerEntries(room).map(([id, player]) => [player.color, [id, player]]));
-    const names = colorOrder.map((color, index) => byColor.get(color)?.[1]?.name || `Компьютер ${index + 1}`);
+    const names = colorOrder.map(color => byColor.get(color)?.[1]?.name || 'Компьютер');
     const humanPlayers = colorOrder.map((color, index) => byColor.has(color) ? index : -1).filter(index => index >= 0);
     const localPlayer = colorOrder.indexOf(room.players?.[uid]?.color);
     return { isHost, names, humanPlayers, localPlayer: Math.max(0, localPlayer) };
@@ -423,6 +444,8 @@
   $('#createOnlineRoom').onclick = createRoom;
   $('#joinOnlineRoom').onclick = joinRoom;
   $('#inviteFriend').onclick = inviteFriend;
+  $('#inviteMessenger').onclick = inviteMessenger;
+  $('#inviteFacebook').onclick = inviteFacebook;
   $('#copyRoomCode').onclick = async () => {
     try { await copyText(roomCode); setNote(`${roomCode} код хуулагдлаа.`, 'success'); }
     catch (_) { setNote('Кодыг хуулж чадсангүй.', 'error'); }

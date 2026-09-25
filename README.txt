@@ -1,4 +1,4 @@
-Та битгий уурлаарай — Web V2.2 ONLINE GAMEPLAY SYNCHRONIZATION
+Та битгий уурлаарай — Web V2.2.1 PLAYER VIEW + SHARED ANIMATIONS
 
 Host this folder through HTTPS (for example GitHub Pages) to use online play.
 The board can still open locally, but Firebase rooms require a connection.
@@ -21,6 +21,13 @@ V2.2 Online Gameplay Synchronization adds:
 - empty colour seats remain computer players, allowing 2–4 invited humans;
 - host validation of remote roll and pawn-move commands;
 - shared winner and match statistics.
+
+V2.2.1 multiplayer polish adds:
+- Blue and Green players see their side at the bottom of their own device;
+- remote pawn hops, launches, captures, plane flights, taxis and arrival effects replay locally;
+- dedicated Messenger and Facebook invitation buttons;
+- shorter computer labels and a more compact A51/mobile header;
+- the shared Firebase board state and host authority remain unchanged.
 
 Firebase connection correction:
 - API key casing verified directly against the Firebase Console configuration;

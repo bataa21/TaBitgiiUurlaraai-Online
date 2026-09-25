@@ -1,4 +1,4 @@
-const CACHE='tbu-v2-2-online-gameplay-v1';
+const CACHE='tbu-v2-2-1-player-view-shared-animation-v1';
 const CORE=[
   './','./index.html','./edition-config.js','./online.js','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./icons/apple-touch-icon.png',
   './assets/diceSound.mp3','./assets/pawn-red.png','./assets/pawn-blue.png','./assets/pawn-green.png','./assets/pawn-yellow.png',

@@ -1,4 +1,4 @@
-V2.2 ONLINE GAMEPLAY FIREBASE SETUP — CONNECTED
+V2.2.1 ONLINE GAMEPLAY FIREBASE SETUP — CONNECTED
 
 This Online Edition is connected to its own dedicated Firebase project:
 
