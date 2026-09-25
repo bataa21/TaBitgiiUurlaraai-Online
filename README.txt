@@ -8,10 +8,13 @@ V2.1 Online Room Foundation adds:
 - host-only start control after everyone is ready;
 - native phone sharing with copy-link fallback;
 - invitation links that automatically open the correct room;
-- isolated Firebase data under /tbuRooms.
+- isolated Firebase data under /tbuRooms;
+- a dedicated ta-bitgii-uurlaarai Firebase project, completely separate from Plane Radar.
 
-See FIREBASE_SETUP.txt before the first hosted online test. V2.1 builds and
-tests the lobby foundation; synchronized dice and pawn movement belong to V2.2.
+Firebase is connected and ready for the first hosted online-room test. See
+FIREBASE_SETUP.txt for the project details and public-release security note.
+V2.1 builds and tests the lobby foundation; synchronized dice and pawn movement
+belong to V2.2.
 
 Commercial structure:
 - offline play remains included;

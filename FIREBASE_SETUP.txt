@@ -1,18 +1,24 @@
-V2.1 ONLINE ROOM FIREBASE SETUP
+V2.1 ONLINE ROOM FIREBASE SETUP — CONNECTED
 
-This package uses the same Firebase project as Plane Radar, but all data is
-isolated under /tbuRooms.
+This Online Edition is connected to its own dedicated Firebase project:
 
-Before testing hosted online rooms:
+Project ID: ta-bitgii-uurlaarai
+Database: https://ta-bitgii-uurlaarai-default-rtdb.asia-southeast1.firebasedatabase.app
+Room path: /tbuRooms
 
-1. In Firebase Console > Authentication > Sign-in method, keep Anonymous
-   authentication enabled.
-2. In Realtime Database > Rules, MERGE the contents of
-   firebase-tbu-rules-snippet.json into the existing top-level "rules" object.
-   Do not replace or remove the existing Plane Radar /rooms rules.
-3. Publish the rules.
-4. Upload this complete folder to GitHub Pages and test with two different
-   browsers/devices. localhost is allowed for development, but file:// is not.
+Configured services:
+
+1. Anonymous Authentication is enabled.
+2. Realtime Database is hosted in Singapore (asia-southeast1).
+3. Authenticated test access is enabled.
+4. Plane Radar data and credentials are not used by this edition.
+
+For hosted testing, upload this complete folder to GitHub Pages and test with
+two different browsers/devices. localhost is allowed for development, but
+file:// cannot use Firebase Authentication reliably.
+
+firebase-tbu-rules-snippet.json contains the tighter room-only rules intended
+to replace the temporary authenticated-user test rules before public release.
 
 V2.1 synchronizes room creation, joining, player names, colors, ready status,
 2–4 seats and invitations. Dice and pawn synchronization intentionally begins

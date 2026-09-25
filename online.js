@@ -3,13 +3,13 @@
   'use strict';
 
   const firebaseConfig = {
-    apiKey: 'AIzaSyBboHmeEIgq7hEyV9KTPOtoMXGn6ofF3tQ',
-    authDomain: 'plane-radar-online.firebaseapp.com',
-    databaseURL: 'https://plane-radar-online-default-rtdb.asia-southeast1.firebasedatabase.app',
-    projectId: 'plane-radar-online',
-    storageBucket: 'plane-radar-online.firebasestorage.app',
-    messagingSenderId: '1064139000800',
-    appId: '1:1064139000800:web:7acd1f89af514460d13985'
+    apiKey: 'AIzaSyDM-a1geS6_R7nEe7r5SSCK7_ka7MXIfEA',
+    authDomain: 'ta-bitgii-uurlaarai.firebaseapp.com',
+    databaseURL: 'https://ta-bitgii-uurlaarai-default-rtdb.asia-southeast1.firebasedatabase.app',
+    projectId: 'ta-bitgii-uurlaarai',
+    storageBucket: 'ta-bitgii-uurlaarai.firebasestorage.app',
+    messagingSenderId: '41627584364',
+    appId: '1:41627584364:web:f4dc28831f308c6f1f1549'
   };
   const ROOM_ROOT = 'tbuRooms';
   const SESSION_KEY = 'tbu-online-room-v1';
