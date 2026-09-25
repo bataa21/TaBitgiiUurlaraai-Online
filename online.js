@@ -1,4 +1,4 @@
-// Та битгий уурлаарай — V2.1 Online Room Foundation
+// Та битгий уурлаарай — V2.2 Online Gameplay Synchronization
 (() => {
   'use strict';
 
@@ -38,6 +38,8 @@
   let roomListener = null;
   let currentRoom = null;
   let busy = false;
+  let gameLaunched = false;
+  let actionListener = null;
 
   function setNote(message, state = '') {
     note.textContent = message;
@@ -174,7 +176,7 @@
     $('#startOnline').hidden = !isHost;
     $('#startOnline').disabled = !isHost || !everyoneReady;
     if (room.status === 'started') {
-      setNote('✅ Өрөө амжилттай бэлэн боллоо! Синхрон тоглолтыг V2.2-д холбоно.', 'success');
+      setNote('✅ Онлайн тоглоом эхэллээ.', 'success');
     } else if (players.length < 2) {
       setNote('Найзаа уриад хүлээнэ үү. Тоглоход хамгийн багадаа 2 хүн хэрэгтэй.');
     } else if (!everyoneReady) {
@@ -182,6 +184,36 @@
     } else {
       setNote(isHost ? 'Бүгд бэлэн! Тоглоомыг эхлүүлж болно.' : 'Бүгд бэлэн. Өрөө үүсгэгч тоглоомыг эхлүүлнэ.', 'success');
     }
+  }
+
+  function gameConfig(room) {
+    const byColor = new Map(playerEntries(room).map(([id, player]) => [player.color, [id, player]]));
+    const names = colorOrder.map((color, index) => byColor.get(color)?.[1]?.name || `Компьютер ${index + 1}`);
+    const humanPlayers = colorOrder.map((color, index) => byColor.has(color) ? index : -1).filter(index => index >= 0);
+    const localPlayer = colorOrder.indexOf(room.players?.[uid]?.color);
+    return { isHost, names, humanPlayers, localPlayer: Math.max(0, localPlayer) };
+  }
+
+  function launchOnlineGame(room) {
+    if (!window.TBUOnlineGame || !room.players?.[uid]) return;
+    if (!gameLaunched) {
+      gameLaunched = true;
+      window.TBUOnlineGame.start(gameConfig(room));
+      if (isHost) {
+        actionListener = roomRef.child('actions').on('child_added', async snapshot => {
+          const command = snapshot.val();
+          try {
+            if (command && command.uid && Number.isInteger(command.player)) {
+              window.TBUOnlineGame.hostAction(command.action, command.player, command.payload || {});
+            }
+          } finally {
+            snapshot.ref.remove().catch(() => {});
+          }
+        });
+      }
+    }
+    overlay.classList.remove('show');
+    if (!isHost && room.game) window.TBUOnlineGame.applySnapshot(room.game);
   }
 
   function escapeHtml(value) {
@@ -197,8 +229,10 @@
         showEntry();
         return;
       }
-      showLobby();
-      renderLobby(snapshot.val());
+      const room = snapshot.val();
+      currentRoom = room;
+      if (room.status === 'started') launchOnlineGame(room);
+      else { showLobby(); renderLobby(room); }
     };
     roomRef.on('value', roomListener, () => setNote('Өрөөний мэдээллийг уншиж чадсангүй.', 'error'));
   }
@@ -330,10 +364,32 @@
     const players = playerEntries(currentRoom);
     if (players.length < 2 || !players.every(([, player]) => player.ready)) return;
     try {
+      await Promise.all([roomRef.child('game').remove(), roomRef.child('actions').remove()]);
+      gameLaunched = true;
+      window.TBUOnlineGame.start(gameConfig(currentRoom));
+      actionListener = roomRef.child('actions').on('child_added', async snapshot => {
+        const command = snapshot.val();
+        try {
+          if (command && command.uid && Number.isInteger(command.player)) window.TBUOnlineGame.hostAction(command.action, command.player, command.payload || {});
+        } finally { snapshot.ref.remove().catch(() => {}); }
+      });
       await roomRef.update({ status: 'started', startedAt: firebase.database.ServerValue.TIMESTAMP });
+      overlay.classList.remove('show');
     } catch (_) {
       setNote('Өрөөг эхлүүлж чадсангүй.', 'error');
     }
+  }
+
+  async function publishGame(snapshot) {
+    if (!isHost || !roomRef) return;
+    await roomRef.child('game').set(snapshot);
+  }
+
+  async function requestAction(action, payload = {}) {
+    if (!roomRef || !currentRoom?.players?.[uid]) return;
+    const player = colorOrder.indexOf(currentRoom.players[uid].color);
+    if (player < 0) return;
+    await roomRef.child('actions').push({ uid, player, action, payload, createdAt: firebase.database.ServerValue.TIMESTAMP });
   }
 
   async function leaveRoom() {
@@ -343,11 +399,14 @@
         else await roomRef.child(`players/${uid}`).remove();
       } catch (_) {}
       if (roomListener) roomRef.off('value', roomListener);
+      if (actionListener) roomRef.child('actions').off('child_added', actionListener);
     }
     roomRef = null;
     roomCode = '';
     currentRoom = null;
     isHost = false;
+    gameLaunched = false;
+    actionListener = null;
     clearSession();
     const url = new URL(location.href);
     url.searchParams.delete('room');
@@ -377,4 +436,5 @@
   if (/^\d{6}$/.test(launchCode || '') || /^\d{6}$/.test(localStorage.getItem(PENDING_INVITE_KEY) || '')) {
     setTimeout(openOnline, 0);
   }
+  window.TBUOnlineRoom = { publishGame, requestAction };
 })();

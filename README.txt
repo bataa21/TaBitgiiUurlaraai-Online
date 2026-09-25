@@ -1,6 +1,7 @@
-Та битгий уурлаарай — Web V2.1 ONLINE EDITION FOUNDATION
+Та битгий уурлаарай — Web V2.2 ONLINE GAMEPLAY SYNCHRONIZATION
 
-Open index.html in a modern browser. No installation or internet connection is required.
+Host this folder through HTTPS (for example GitHub Pages) to use online play.
+The board can still open locally, but Firebase rooms require a connection.
 
 V2.1 Online Room Foundation adds:
 - private six-digit rooms for 2–4 invited players;
@@ -13,8 +14,13 @@ V2.1 Online Room Foundation adds:
 
 Firebase is connected and ready for the first hosted online-room test. See
 FIREBASE_SETUP.txt for the project details and public-release security note.
-V2.1 builds and tests the lobby foundation; synchronized dice and pawn movement
-belong to V2.2.
+V2.2 Online Gameplay Synchronization adds:
+- one authoritative shared dice result and turn order for every device;
+- each invited player controls the colour selected in the lobby;
+- synchronized pawn positions, captures, planes, taxis, safe towers and finish lanes;
+- empty colour seats remain computer players, allowing 2–4 invited humans;
+- host validation of remote roll and pawn-move commands;
+- shared winner and match statistics.
 
 Firebase connection correction:
 - API key casing verified directly against the Firebase Console configuration;
@@ -100,3 +106,8 @@ If Plane Radar captures this URL, disable its supported-link handling, narrow Pl
 or uninstall it while testing this game in a normal Edge tab.
 
 The original uploaded web edition was not modified.
+
+V2.1 online join reliability update v6:
+- invited guests write only their own player seat instead of rewriting the room;
+- online.js and page navigations use a network-first service-worker path;
+- join failures now show the real Firebase/error category on screen.

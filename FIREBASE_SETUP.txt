@@ -1,4 +1,4 @@
-V2.1 ONLINE ROOM FIREBASE SETUP — CONNECTED
+V2.2 ONLINE GAMEPLAY FIREBASE SETUP — CONNECTED
 
 This Online Edition is connected to its own dedicated Firebase project:
 
@@ -20,6 +20,6 @@ file:// cannot use Firebase Authentication reliably.
 firebase-tbu-rules-snippet.json contains the tighter room-only rules intended
 to replace the temporary authenticated-user test rules before public release.
 
-V2.1 synchronizes room creation, joining, player names, colors, ready status,
-2–4 seats and invitations. Dice and pawn synchronization intentionally begins
-in V2.2.
+V2.2 synchronizes room creation, player seats, ready status, dice results,
+turns, pawn positions and completed moves. The host is authoritative; invited
+devices submit validated roll and pawn-selection commands.
