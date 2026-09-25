@@ -261,20 +261,23 @@
       const initialSnapshot = await candidateRef.once('value');
       const initialRoom = initialSnapshot.val();
       if (!initialRoom || initialRoom.status !== 'waiting') throw new Error('room-unavailable');
-      const result = await candidateRef.transaction(room => {
-        if (!room || room.status !== 'waiting') return;
-        room.players ||= {};
-        if (!room.players[uid] && Object.keys(room.players).length >= 4) return;
-        const used = new Set(Object.entries(room.players).filter(([id]) => id !== uid).map(([, player]) => player.color));
-        const color = room.players[uid]?.color || colorOrder.find(item => !used.has(item));
-        if (!color) return;
-        room.players[uid] = { name, color, ready: room.players[uid]?.ready || false, joinedAt: room.players[uid]?.joinedAt || firebase.database.ServerValue.TIMESTAMP, online: true };
-        return room;
-      }, undefined, false);
-      if (!result.committed) throw new Error('room-unavailable');
+      const players = initialRoom.players || {};
+      if (!players[uid] && Object.keys(players).length >= 4) throw new Error('room-full');
+      const used = new Set(Object.entries(players).filter(([id]) => id !== uid).map(([, player]) => player.color));
+      const color = players[uid]?.color || colorOrder.find(item => !used.has(item));
+      if (!color) throw new Error('room-full');
+      // Write only this guest's seat. Rewriting the whole room from a guest
+      // transaction is unnecessary and can be rejected by stricter rules.
+      await candidateRef.child(`players/${uid}`).set({
+        name,
+        color,
+        ready: players[uid]?.ready || false,
+        joinedAt: players[uid]?.joinedAt || firebase.database.ServerValue.TIMESTAMP,
+        online: true
+      });
       roomCode = candidate;
       roomRef = candidateRef;
-      isHost = result.snapshot.val().hostUid === uid;
+      isHost = initialRoom.hostUid === uid;
       saveSession();
       localStorage.removeItem(PENDING_INVITE_KEY);
       await roomRef.child(`players/${uid}/online`).onDisconnect().set(false);
@@ -282,7 +285,15 @@
       history.replaceState(null, '', invitationUrl());
     } catch (error) {
       console.error(error);
-      setNote('Өрөө олдсонгүй, дүүрсэн эсвэл тоглоом эхэлсэн байна.', 'error');
+      if (error?.code === 'PERMISSION_DENIED') {
+        setNote('Firebase зөвшөөрөл хаалттай байна (PERMISSION_DENIED). Database Rules-ийг шалгана уу.', 'error');
+      } else if (error?.message === 'room-full') {
+        setNote('Өрөө дүүрсэн байна.', 'error');
+      } else if (error?.message === 'room-unavailable') {
+        setNote('Өрөө олдсонгүй эсвэл тоглоом эхэлсэн байна.', 'error');
+      } else {
+        setNote(`Өрөөнд нэгдэж чадсангүй: ${error?.code || error?.message || 'unknown-error'}`, 'error');
+      }
     } finally {
       setBusy(false);
     }
