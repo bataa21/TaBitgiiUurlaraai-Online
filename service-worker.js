@@ -1,4 +1,4 @@
-const CACHE='tbu-v2-1-online-edition-dedicated-firebase-v3';
+const CACHE='tbu-v2-1-online-edition-dedicated-firebase-v4';
 const CORE=[
   './','./index.html','./edition-config.js','./online.js','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./icons/apple-touch-icon.png',
   './assets/diceSound.mp3','./assets/pawn-red.png','./assets/pawn-blue.png','./assets/pawn-green.png','./assets/pawn-yellow.png',

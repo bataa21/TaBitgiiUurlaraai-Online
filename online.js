@@ -3,7 +3,7 @@
   'use strict';
 
   const firebaseConfig = {
-    apiKey: 'AIzaSyDM-a1geS6_R7nEe7r5SSCk7_ka7MXIfEA',
+    apiKey: 'AIzaSyDM-a1geS6_R7nEe7r55SCk7_ka7MXIfEA',
     authDomain: 'ta-bitgii-uurlaarai.firebaseapp.com',
     databaseURL: 'https://ta-bitgii-uurlaarai-default-rtdb.asia-southeast1.firebasedatabase.app',
     projectId: 'ta-bitgii-uurlaarai',
